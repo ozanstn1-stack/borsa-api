@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<script>
+window['ai_edge_gallery_get_result'] = async (data) => {
+  const API_BASE_URL = "https://borsa-api.ozanborsabot.workers.dev";
+
+  try {
+    const jsonData = JSON.parse(data);
+    const endpoint = jsonData.endpoint || "/tumu";
+    const response = await fetch(`${API_BASE_URL}${endpoint}`);
+
+    if (!response.ok) {
+      return JSON.stringify({ error: `API yanit vermedi. HTTP ${response.status}` });
+    }
+
+    const result = await response.json();
+    return JSON.stringify({ result: JSON.stringify(result) });
+  } catch (e) {
+    console.error(e);
+    return JSON.stringify({ error: `Veri cekilemedi: ${e.message}` });
+  }
+};
+</script>
+</body>
+</html>
