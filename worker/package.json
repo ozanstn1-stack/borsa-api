@@ -1,0 +1,14 @@
+{
+  "name": "borsa-api-worker",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker - Borsa İstanbul, Global Markets & TEFAS API",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": {
+    "wrangler": "^3.99.0"
+  }
+}
