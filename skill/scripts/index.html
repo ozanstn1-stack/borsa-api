@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Borsa API Skill</title>
+</head>
+<body>
+<script>
+/**
+ * Borsa Asistanı — Google AI Edge Gallery Skill Script
+ * Bu script gizli bir webview içinde çalışır ve Cloudflare Worker API'ye bağlanır.
+ */
+
+const API_BASE_URL = "https://borsa-api.ozanborsabot.workers.dev";
+
+// Edge Gallery, bu fonksiyonu data parametresiyle çağırır
+async function run(data) {
+  try {
+    const endpoint = (data && data.endpoint) ? data.endpoint : "/tumu";
+    const response = await fetch(`${API_BASE_URL}${endpoint}`);
+
+    if (!response.ok) {
+      return JSON.stringify({
+        hata: true,
+        mesaj: `API yanıt vermedi. HTTP ${response.status}`,
+      });
+    }
+
+    const result = await response.json();
+    return JSON.stringify(result);
+  } catch (error) {
+    return JSON.stringify({
+      hata: true,
+      mesaj: `Veri çekilemedi: ${error.message}`,
+    });
+  }
+}
+
+// Edge Gallery mesaj dinleyicisi
+window.addEventListener("message", async (event) => {
+  try {
+    const data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+    const result = await run(data);
+    window.parent.postMessage(result, "*");
+  } catch (e) {
+    window.parent.postMessage(JSON.stringify({ hata: true, mesaj: e.message }), "*");
+  }
+});
+</script>
+</body>
+</html>
